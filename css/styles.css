@@ -1,0 +1,572 @@
+/* =============================================
+   Colores de Ensueño — Estilos principales
+   ============================================= */
+
+/* ── Tokens de color ── */
+:root {
+  --bg: #faf8f5;
+  --fg: #1c1612;
+  --fg2: #5a4e43;
+  --fg3: #8a7a6e;
+  --accent: #bf3a5c;
+  --green: #1e6b53;
+  --gold: #c49a3a;
+  --card-bg: #ffffff;
+  --nav-bg: rgba(250,248,245,0.92);
+  --border: #e8e0d6;
+  --hero-bg: #1e1a17;
+  --hero-fg: #f5f0ea;
+}
+
+/* Tema oscuro (sistema) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1714;
+    --fg: #f0ebe3;
+    --fg2: #c4b8a8;
+    --fg3: #8a7a6e;
+    --accent: #d4556e;
+    --green: #2a9070;
+    --gold: #d4aa50;
+    --card-bg: #242018;
+    --nav-bg: rgba(26,23,20,0.92);
+    --border: #3a3228;
+    --hero-bg: #0e0c0a;
+    --hero-fg: #f0ebe3;
+    color-scheme: dark;
+  }
+}
+
+/* Tema oscuro (forzado) */
+:root[data-theme="dark"] {
+  --bg: #1a1714;
+  --fg: #f0ebe3;
+  --fg2: #c4b8a8;
+  --fg3: #8a7a6e;
+  --accent: #d4556e;
+  --green: #2a9070;
+  --gold: #d4aa50;
+  --card-bg: #242018;
+  --nav-bg: rgba(26,23,20,0.92);
+  --border: #3a3228;
+  --hero-bg: #0e0c0a;
+  --hero-fg: #f0ebe3;
+  color-scheme: dark;
+}
+
+/* ── Reset base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.65;
+  padding-inline: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Navegación ── */
+nav {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 100;
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 clamp(16px, 5vw, 80px);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.nav-logo span {
+  color: var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg2);
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .nav-links { gap: 16px; }
+  .nav-links a { font-size: 0.72rem; letter-spacing: 0.06em; }
+}
+
+@media (max-width: 440px) {
+  .nav-links { display: none; }
+}
+
+/* ── Hero ── */
+.hero {
+  background: var(--hero-bg);
+  color: var(--hero-fg);
+  min-height: 90svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(48px, 10vw, 100px) clamp(16px, 6vw, 80px);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 80%, rgba(191,58,92,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(30,107,83,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 8vw, 6rem);
+  font-weight: 500;
+  line-height: 1.08;
+  text-wrap: balance;
+  margin-bottom: 24px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  font-weight: 300;
+  color: rgba(245,240,234,0.75);
+  max-width: 520px;
+  margin-bottom: 40px;
+  text-wrap: balance;
+}
+
+/* ── Botones ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 2px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #a8304f;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--hero-fg);
+  border: 1px solid rgba(245,240,234,0.35);
+  margin-left: 12px;
+}
+
+.btn-outline:hover {
+  border-color: var(--hero-fg);
+}
+
+/* Scroll indicator */
+.hero-scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(245,240,234,0.4);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(245,240,234,0.4), transparent);
+  animation: scrollpulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollpulse {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50%       { opacity: 0.8; transform: scaleY(1.1); }
+}
+
+/* ── Secciones base ── */
+section {
+  padding: clamp(60px, 10vw, 100px) clamp(16px, 6vw, 80px);
+}
+
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+  display: block;
+}
+
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 500;
+  line-height: 1.12;
+  text-wrap: balance;
+  margin-bottom: 28px;
+}
+
+/* ── Quiénes somos ── */
+.about {
+  background: var(--bg);
+}
+
+.about-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+}
+
+@media (max-width: 720px) {
+  .about-inner { grid-template-columns: 1fr; }
+}
+
+.about-quote-block {
+  border-left: 3px solid var(--accent);
+  padding-left: 24px;
+  margin-bottom: 32px;
+}
+
+.about-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--fg);
+  margin-bottom: 10px;
+}
+
+.about-quote-author {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg3);
+}
+
+.about-text p {
+  color: var(--fg2);
+  margin-bottom: 18px;
+  font-size: 0.97rem;
+  line-height: 1.75;
+}
+
+.about-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Franja estadísticas ── */
+.stats-strip {
+  background: var(--green);
+  color: #fff;
+  padding: clamp(36px, 6vw, 56px) clamp(16px, 6vw, 80px);
+}
+
+.stats-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .stats-inner { grid-template-columns: 1fr; gap: 24px; }
+}
+
+.stat-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  font-weight: 500;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.4;
+}
+
+/* ── Productos ── */
+.products {
+  background: var(--card-bg);
+}
+
+.products-header {
+  max-width: 1100px;
+  margin: 0 auto 48px;
+}
+
+.products-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.product-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+}
+
+.product-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  background: var(--border);
+}
+
+.product-info {
+  padding: 18px 20px 22px;
+}
+
+.product-category {
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.product-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 6px;
+  color: var(--fg);
+}
+
+.product-desc {
+  font-size: 0.82rem;
+  color: var(--fg3);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.product-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--green);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Ferias ── */
+.fairs {
+  background: var(--bg);
+}
+
+.fairs-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.fairs-inner .section-title {
+  margin-bottom: 20px;
+}
+
+.fairs-intro {
+  font-size: 1rem;
+  color: var(--fg2);
+  max-width: 620px;
+  margin: 0 auto 48px;
+  line-height: 1.8;
+}
+
+.fairs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  text-align: left;
+}
+
+.fair-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 24px 20px;
+}
+
+.fair-icon {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+
+.fair-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 6px;
+}
+
+.fair-detail {
+  font-size: 0.82rem;
+  color: var(--fg3);
+  line-height: 1.5;
+}
+
+/* ── Instagram CTA ── */
+.instagram {
+  background: linear-gradient(135deg, var(--hero-bg) 0%, #2d1f2a 100%);
+  color: var(--hero-fg);
+  text-align: center;
+  padding: clamp(60px, 10vw, 100px) clamp(16px, 6vw, 80px);
+}
+
+.instagram .section-label {
+  color: var(--gold);
+}
+
+.instagram .section-title {
+  color: var(--hero-fg);
+  margin-bottom: 16px;
+}
+
+.insta-handle {
+  font-size: 1.1rem;
+  color: rgba(245,240,234,0.65);
+  margin-bottom: 36px;
+}
+
+.insta-handle a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.insta-handle a:hover {
+  color: #fff;
+}
+
+/* ── Footer ── */
+footer {
+  background: #0e0c0a;
+  color: rgba(245,240,234,0.45);
+  text-align: center;
+  padding: 36px clamp(16px, 6vw, 80px);
+  padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+
+footer strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: rgba(245,240,234,0.65);
+  margin-bottom: 6px;
+  letter-spacing: 0.06em;
+}
+
+footer a {
+  color: var(--gold);
+}
+
+footer a:hover {
+  color: #fff;
+}
+
+.footer-divider {
+  margin: 16px auto;
+  width: 40px;
+  height: 1px;
+  background: rgba(245,240,234,0.15);
+}
