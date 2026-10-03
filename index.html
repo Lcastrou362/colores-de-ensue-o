@@ -1,422 +1,242 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Colores de Ensueño — Módulo Ventas</title>
-  <style>
-    :root {
-      --bg: #f8f9fb;
-      --card: #ffffff;
-      --border: #e2e6ef;
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --success: #059669;
-      --danger: #dc2626;
-      --warn: #d97706;
-      --fg: #1e293b;
-      --muted: #64748b;
-      --font: 'Segoe UI', system-ui, sans-serif;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg); color: var(--fg);
-      font-family: var(--font); min-height: 100vh;
-    }
-    header {
-      background: #1e293b; color: #f1f5f9;
-      padding: 14px 24px; display: flex;
-      align-items: center; gap: 14px;
-    }
-    header h1 { font-size: 1.05rem; font-weight: 600; }
-    header span { font-size: .8rem; color: #94a3b8; }
-    main {
-      max-width: 1200px; margin: 0 auto;
-      padding: 24px 16px;
-      display: grid;
-      grid-template-columns: 1fr 360px;
-      gap: 20px;
-    }
-    @media (max-width: 720px) { main { grid-template-columns: 1fr; } }
-    .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 20px;
-    }
-    .card-title {
-      font-size: .9rem; font-weight: 600;
-      margin-bottom: 14px; color: var(--fg);
-      display: flex; align-items: center; gap: 8px;
-    }
-    .productos-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-      gap: 12px;
-    }
-    .producto-card {
-      border: 2px solid var(--border); border-radius: 10px;
-      cursor: pointer; transition: border-color .15s, box-shadow .15s;
-      overflow: hidden; position: relative; background: var(--card);
-    }
-    .producto-card:hover:not(.sin-stock) {
-      border-color: var(--primary);
-      box-shadow: 0 2px 12px rgba(37,99,235,.15);
-    }
-    .producto-card.en-carrito {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37,99,235,.2);
-    }
-    .producto-card.sin-stock { opacity: .45; cursor: not-allowed; }
-    .cart-badge {
-      position: absolute; top: 8px; right: 8px;
-      background: var(--primary); color: #fff;
-      border-radius: 20px; font-size: .72rem; font-weight: 700;
-      padding: 2px 8px; display: none;
-      box-shadow: 0 1px 4px rgba(0,0,0,.3);
-      z-index: 2;
-    }
-    .en-carrito .cart-badge { display: block; }
-    .prod-img {
-      width: 100%; aspect-ratio: 1/1; object-fit: cover;
-      background: #f1f5f9; display: block;
-    }
-    .prod-img-placeholder {
-      width: 100%; aspect-ratio: 1/1;
-      background: #f1f5f9; display: flex;
-      align-items: center; justify-content: center;
-      font-size: 2.5rem;
-    }
-    .prod-info { padding: 10px; }
-    .prod-nombre { font-size: .82rem; font-weight: 600; margin-bottom: 3px; line-height: 1.3; }
-    .prod-precio { font-size: .95rem; font-weight: 700; color: var(--primary); }
-    .prod-stock {
-      font-size: .72rem; margin-top: 5px;
-      padding: 2px 7px; border-radius: 20px;
-      display: inline-block;
-    }
-    .stock-ok   { background: #dcfce7; color: #166534; }
-    .stock-bajo { background: #fef3c7; color: #92400e; }
-    .stock-ago  { background: #fee2e2; color: #991b1b; }
-    .prod-qty-controls {
-      display: none;
-      position: absolute; bottom: 0; left: 0; right: 0;
-      background: rgba(37,99,235,.92); padding: 6px 10px;
-      justify-content: space-between; align-items: center;
-      color: #fff; font-size: .82rem; font-weight: 600;
-    }
-    .en-carrito .prod-qty-controls { display: flex; }
-    .prod-qty-controls button {
-      background: rgba(255,255,255,.25); border: none; color: #fff;
-      width: 26px; height: 26px; border-radius: 6px; cursor: pointer;
-      font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
-    }
-    .prod-qty-controls button:hover { background: rgba(255,255,255,.4); }
-    .carrito-items { display: flex; flex-direction: column; gap: 8px; }
-    .carrito-item {
-      display: flex; align-items: center; gap: 8px;
-      border: 1px solid var(--border); border-radius: 7px;
-      padding: 9px 11px; font-size: .84rem;
-    }
-    .ci-nombre { flex: 1; font-weight: 500; line-height: 1.3; }
-    .ci-qty { display: flex; align-items: center; gap: 4px; }
-    .ci-qty button {
-      width: 24px; height: 24px; border: 1px solid var(--border);
-      background: var(--bg); border-radius: 5px; cursor: pointer;
-      font-size: .9rem; display: flex; align-items: center; justify-content: center;
-    }
-    .ci-qty span { min-width: 22px; text-align: center; font-weight: 600; }
-    .ci-sub { font-weight: 700; min-width: 72px; text-align: right; color: var(--primary); }
-    .ci-rm { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 0 2px; }
-    .ci-rm:hover { color: var(--danger); }
-    .total-box { border-top: 1px solid var(--border); margin-top: 14px; padding-top: 14px; }
-    .total-row { display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; }
-    .canal-label { font-size: .8rem; color: var(--muted); margin: 14px 0 5px; }
-    .canal-select {
-      width: 100%; padding: 8px 10px; border: 1px solid var(--border);
-      border-radius: 7px; font-size: .88rem; background: var(--card);
-    }
-    .notas-input {
-      width: 100%; padding: 8px 10px; border: 1px solid var(--border);
-      border-radius: 7px; font-size: .85rem; resize: vertical;
-      font-family: inherit; margin-top: 10px;
-    }
-    .btn-registrar {
-      width: 100%; margin-top: 14px; padding: 12px;
-      background: var(--primary); color: #fff; border: none;
-      border-radius: 8px; font-size: .95rem; font-weight: 600;
-      cursor: pointer; transition: background .15s;
-    }
-    .btn-registrar:hover:not(:disabled) { background: var(--primary-hover); }
-    .btn-registrar:disabled { background: #94a3b8; cursor: not-allowed; }
-    .historial-list { display: flex; flex-direction: column; gap: 8px; }
-    .hist-item { border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; font-size: .82rem; }
-    .hist-header { display: flex; justify-content: space-between; margin-bottom: 3px; }
-    .hist-id { font-weight: 600; color: var(--primary); }
-    .hist-total { font-weight: 700; }
-    .hist-meta { color: var(--muted); font-size: .75rem; }
-    .hist-canal { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: .72rem; font-weight: 600; }
-    .canal-TIENDA { background: #dbeafe; color: #1d4ed8; }
-    .canal-FERIA  { background: #fef3c7; color: #92400e; }
-    .canal-RRSS   { background: #ede9fe; color: #5b21b6; }
-    #toast {
-      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-      background: var(--success); color: #fff;
-      padding: 12px 22px; border-radius: 8px;
-      font-size: .88rem; font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,.15);
-      opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999;
-    }
-    #toast.show { opacity: 1; }
-    .empty { color: var(--muted); font-size: .84rem; text-align: center; padding: 20px 0; }
-    .loading { color: var(--muted); font-size: .84rem; }
-    .err { color: var(--danger); font-size: .84rem; margin-top: 8px; }
-    .resumen-items { font-size: .78rem; color: var(--muted); }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colores de Ensueño</title>
+  <meta name="description" content="Artesanía textil hecha a mano en Melipilla. Cojines, bolsos y textiles del hogar con más de 13 años de trayectoria.">
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>🎨 Colores de Ensueño</h1>
-    <span>Módulo de Ventas</span>
-  </div>
-</header>
+  <!-- NAVEGACIÓN -->
+  <nav>
+    <a href="#" class="nav-logo">Colores de <span>Ensueño</span></a>
+    <ul class="nav-links">
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#productos">Productos</a></li>
+      <li><a href="#ferias">Ferias</a></li>
+      <li><a href="#instagram">Contacto</a></li>
+    </ul>
+  </nav>
 
-<main>
-  <div style="display:flex;flex-direction:column;gap:20px">
-    <div class="card">
-      <div class="card-title">
-        📦 Productos disponibles
-        <span id="resumen-carrito" class="resumen-items"></span>
+  <!-- HERO -->
+  <section class="hero">
+    <p class="hero-eyebrow">Artesanía textil · Melipilla, Chile</p>
+    <h1 class="hero-title">Hecho a mano,<br>hecho con <em>alma</em></h1>
+    <p class="hero-sub">Cojines, bolsos y textiles del hogar tejidos con amor en el corazón de la Región Metropolitana. Trece años de oficio artesanal.</p>
+    <div>
+      <a href="#productos" class="btn btn-primary">Ver productos</a>
+      <a href="#nosotros" class="btn btn-outline">Nuestra historia</a>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>Descubrir</span>
+    </div>
+  </section>
+
+  <!-- QUIÉNES SOMOS -->
+  <section class="about" id="nosotros">
+    <div class="about-inner">
+      <div>
+        <span class="section-label">Quiénes somos</span>
+        <h2 class="section-title">13 años cosiendo sueños en cada pieza</h2>
+        <div class="about-text">
+          <p>Colores de Ensueño nació en <strong>Melipilla</strong> de la mano de Ximena Urbano, artesana con más de <strong>13 años de trayectoria</strong> en la creación textil. Cada bolso, cojín y camino de mesa sale de sus manos con la misma dedicación con la que inició este camino: transformar telas en objetos que duran y que emocionan.</p>
+          <p>El nuestro es un trabajo de comunidad. Ximena comparte el oficio junto a <strong>otros artesanos y artesanas</strong>, recorriendo ferias donde se celebra lo hecho a mano. Ese espíritu de colaboración y respeto por el trabajo artesanal se refleja en cada pieza.</p>
+          <p>Si buscas algo único, con historia y con cariño, estás en el lugar indicado.</p>
+        </div>
       </div>
-      <div id="productos-grid" class="productos-grid">
-        <p class="loading">Cargando productos…</p>
+      <div>
+        <div class="about-quote-block">
+          <p class="about-quote">"Cada puntada es intencional. Cada color tiene una razón de ser."</p>
+          <span class="about-quote-author">— Ximena Urbano, fundadora</span>
+        </div>
+        <div class="about-text">
+          <p>Trabajamos principalmente con <strong>lona turca, lino gamuzado y técnica patchwork</strong> — materiales elegidos por su durabilidad y su capacidad de retener el color. Lo que sale de nuestro taller está pensado para acompañarte muchos años.</p>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-title">🕐 Últimas ventas</div>
-      <div id="historial" class="historial-list">
-        <p class="loading">Cargando historial…</p>
+  </section>
+
+  <!-- ESTADÍSTICAS -->
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div>
+        <div class="stat-number">13+</div>
+        <div class="stat-label">Años de trayectoria<br>artesanal</div>
+      </div>
+      <div>
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Hecho a mano<br>en Melipilla</div>
+      </div>
+      <div>
+        <div class="stat-number">♥</div>
+        <div class="stat-label">Comunidad de artesanos<br>que comparte el oficio</div>
       </div>
     </div>
   </div>
 
-  <div>
-    <div class="card" style="position:sticky;top:16px">
-      <div class="card-title">🛒 Venta actual</div>
-      <div id="carrito-items" class="carrito-items">
-        <p class="empty" id="carrito-vacio">Haz clic en un producto para agregarlo</p>
-      </div>
-      <div class="total-box">
-        <div class="total-row">
-          <span>Total</span>
-          <span id="total">$0</span>
+  <!-- PRODUCTOS -->
+  <section class="products" id="productos">
+    <div class="products-header">
+      <span class="section-label">Nuestros productos</span>
+      <h2 class="section-title">Textiles que cuentan una historia</h2>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <img class="product-img" src="images/cojin_cuadrado.jpg" alt="Cojín Cuadrado Lino Gamuzado" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Cojines</div>
+          <div class="product-name">Cojín Cuadrado Lino Gamuzado</div>
+          <div class="product-desc">Textura suave y elegante, ideal para sala o dormitorio.</div>
+          <div class="product-price">$8.000</div>
         </div>
-        <div class="canal-label">Canal de venta</div>
-        <select id="canal" class="canal-select">
-          <option value="TIENDA">🏪 Tienda</option>
-          <option value="RRSS">📱 Redes sociales</option>
-          <option value="FERIA">🎪 Feria</option>
-        </select>
-        <textarea id="notas" class="notas-input" rows="2"
-          placeholder="Notas (opcional): método de pago, cliente, etc."></textarea>
-        <button id="btn-registrar" class="btn-registrar" onclick="registrarVenta()">
-          Registrar venta
-        </button>
-        <p id="error-msg" class="err" hidden></p>
+      </div>
+
+      <div class="product-card">
+        <img class="product-img" src="images/cojin_rectangular.jpg" alt="Cojín Rectangular Lino Gamuzado" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Cojines</div>
+          <div class="product-name">Cojín Rectangular Lino Gamuzado</div>
+          <div class="product-desc">Formato alargado, perfecto para sofá o respaldo de cama.</div>
+          <div class="product-price">$6.000</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img class="product-img" src="images/cojin_infantil.jpg" alt="Cojín Infantil" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Cojines</div>
+          <div class="product-name">Cojín Infantil</div>
+          <div class="product-desc">Diseños de hadas, estrellas y nubes para los más pequeños.</div>
+          <div class="product-price">$6.000</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img class="product-img" src="images/cojin_lino.jpg" alt="Cojín Lino" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Cojines</div>
+          <div class="product-name">Cojín Lino</div>
+          <div class="product-desc">Línea natural y minimalista, disponible en varios tamaños.</div>
+          <div class="product-price">Desde $6.000</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img class="product-img" src="images/bolso_playero.jpg" alt="Bolso Playero Lona Turca" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Bolsos</div>
+          <div class="product-name">Bolso Playero Lona Turca</div>
+          <div class="product-desc">Amplio, resistente y colorido para tus días de sol.</div>
+          <div class="product-price">$7.000</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img class="product-img" src="images/bolso_compras.jpg" alt="Bolso de Compras Lona Turca" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Bolsos</div>
+          <div class="product-name">Bolso de Compras Lona Turca</div>
+          <div class="product-desc">Práctico y ecológico, perfectamente cosido para durar.</div>
+          <div class="product-price">$7.000</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img class="product-img" src="images/bolso_patchwork.jpg" alt="Bolso Patchwork" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Bolsos</div>
+          <div class="product-name">Bolso Patchwork</div>
+          <div class="product-desc">Combinación única de retazos, cada uno irrepetible.</div>
+          <div class="product-price">$10.000</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img class="product-img" src="images/camino_mesa.jpg" alt="Camino de Mesa Patchwork" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Hogar</div>
+          <div class="product-name">Camino de Mesa Patchwork</div>
+          <div class="product-desc">Dale vida a tu mesa con combinaciones de colores únicas.</div>
+          <div class="product-price">$14.000</div>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <img class="product-img" src="images/mantel.jpg" alt="Mantel Lona Turca" loading="lazy">
+        <div class="product-info">
+          <div class="product-category">Hogar</div>
+          <div class="product-name">Mantel Lona Turca</div>
+          <div class="product-desc">Resistente, lavable y con un color que no destiñe.</div>
+          <div class="product-price">Desde $18.000</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FERIAS -->
+  <section class="fairs" id="ferias">
+    <div class="fairs-inner">
+      <span class="section-label">Dónde encontrarnos</span>
+      <h2 class="section-title">Presentes en las ferias artesanales</h2>
+      <p class="fairs-intro">Las ferias son nuestro hogar. Ahí es donde el trabajo artesanal cobra vida, donde puedes tocar las telas, ver los colores de cerca y conversar con quienes hacemos cada pieza. Ximena recorre las ferias junto a una comunidad de artesanos que comparte la misma pasión por lo hecho a mano.</p>
+      <div class="fairs-grid">
+        <div class="fair-card">
+          <div class="fair-icon">🧵</div>
+          <div class="fair-name">Feria Artesanal Melipilla</div>
+          <div class="fair-detail">Nuestra feria local de origen, donde todo comenzó.</div>
+        </div>
+        <div class="fair-card">
+          <div class="fair-icon">🎨</div>
+          <div class="fair-name">Ferias Regionales</div>
+          <div class="fair-detail">Participamos en ferias de artesanía a lo largo de la Región Metropolitana.</div>
+        </div>
+        <div class="fair-card">
+          <div class="fair-icon">📅</div>
+          <div class="fair-name">¿Cuándo y dónde?</div>
+          <div class="fair-detail">Síguenos en Instagram <a href="https://www.instagram.com/ximenaurbano5" target="_blank" rel="noopener" style="color:var(--accent)">@ximenaurbano5</a> para ver las fechas de las próximas ferias.</div>
+        </div>
       </div>
     </div>
-  </div>
-</main>
+  </section>
 
-<div id="toast">✅ Venta registrada</div>
+  <!-- INSTAGRAM -->
+  <section class="instagram" id="instagram">
+    <span class="section-label">Síguenos</span>
+    <h2 class="section-title">Conéctate con nosotros</h2>
+    <p class="insta-handle">
+      Encuentra los últimos trabajos, fechas de ferias y novedades en
+      <a href="https://www.instagram.com/ximenaurbano5" target="_blank" rel="noopener">@ximenaurbano5</a>
+    </p>
+    <a href="https://www.instagram.com/ximenaurbano5" target="_blank" rel="noopener"
+       class="btn btn-primary" style="background:var(--gold);color:#1c1612;font-weight:500">
+      Ver en Instagram →
+    </a>
+  </section>
 
-<script>
-let carrito = [];
-let productosData = [];
+  <!-- FOOTER -->
+  <footer>
+    <strong>Colores de Ensueño</strong>
+    Artesanía textil hecha a mano · Melipilla, Chile
+    <div class="footer-divider"></div>
+    <a href="https://www.instagram.com/ximenaurbano5" target="_blank" rel="noopener">@ximenaurbano5</a>
+    &nbsp;·&nbsp;
+    © 2026 Ximena Urbano
+  </footer>
 
-const fmt = n => '$' + Number(n).toLocaleString('es-CL');
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
 
-async function cargarProductos() {
-  const grid = document.getElementById('productos-grid');
-  try {
-    const res = await fetch('/api/productos');
-    productosData = await res.json();
-    if (productosData.length === 0) {
-      grid.innerHTML = '<p class="empty">No hay productos registrados aún.</p>';
-      return;
-    }
-    renderProductos();
-  } catch {
-    grid.innerHTML = '<p class="err">No se pudo conectar al servidor.</p>';
-  }
-}
-
-function renderProductos() {
-  const grid = document.getElementById('productos-grid');
-  grid.innerHTML = productosData.map(p => {
-    const enCarrito = carrito.find(i => i.id === p.id);
-    const cant = enCarrito ? enCarrito.cantidad : 0;
-    const stockRestante = p.stockDisponible - cant;
-    const stockClass = stockRestante <= 0 ? 'stock-ago' : stockRestante <= 3 ? 'stock-bajo' : 'stock-ok';
-    const stockLabel = stockRestante <= 0 ? 'Agotado' : stockRestante <= 3 ? `⚠ ${stockRestante} disp.` : `${stockRestante} disponibles`;
-    const sinStock = p.stockDisponible === 0 ? 'sin-stock' : '';
-    const inCart = cant > 0 ? 'en-carrito' : '';
-
-    const qtyBar = cant > 0 ? `
-      <div class="prod-qty-controls" onclick="event.stopPropagation()">
-        <button onclick="cambiarDesdeCard(${p.id},-1)">−</button>
-        <span>${cant} en carrito</span>
-        <button onclick="cambiarDesdeCard(${p.id},1)">+</button>
-      </div>` : '';
-
-    return `<div class="producto-card ${sinStock} ${inCart}" id="card-${p.id}"
-         onclick="clickProducto(${p.id})"
-         data-stock="${p.stockDisponible}">
-      <span class="cart-badge">${cant > 0 ? '×'+cant : ''}</span>
-      <img class="prod-img" src="/api/productos/${p.id}/imagen" alt="${p.nombre}"
-           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <div class="prod-img-placeholder" style="display:none">🎨</div>
-      <div class="prod-info">
-        <div class="prod-nombre">${p.nombre}</div>
-        <div class="prod-precio">${fmt(p.precioUnitario)}</div>
-        <span class="prod-stock ${stockClass}">${stockLabel}</span>
-      </div>
-      ${qtyBar}
-    </div>`;
-  }).join('');
-
-  const total = carrito.reduce((s,i) => s+i.cantidad, 0);
-  document.getElementById('resumen-carrito').textContent =
-    total > 0 ? `· ${total} ítem${total>1?'s':''} en carrito` : '';
-}
-
-function clickProducto(id) {
-  const prod = productosData.find(p => p.id === id);
-  if (!prod || prod.stockDisponible === 0) return;
-  const item = carrito.find(i => i.id === id);
-  const cant = item ? item.cantidad : 0;
-  if (cant >= prod.stockDisponible) {
-    mostrarError(`Stock máximo para "${prod.nombre}": ${prod.stockDisponible}`);
-    return;
-  }
-  if (item) item.cantidad++;
-  else carrito.push({ id: prod.id, nombre: prod.nombre, precio: prod.precioUnitario, cantidad: 1, stockMax: prod.stockDisponible });
-  document.getElementById('error-msg').hidden = true;
-  renderProductos();
-  renderCarrito();
-}
-
-function cambiarDesdeCard(id, delta) {
-  const idx = carrito.findIndex(i => i.id === id);
-  if (idx === -1) return;
-  const prod = productosData.find(p => p.id === id);
-  const nueva = carrito[idx].cantidad + delta;
-  if (nueva > (prod ? prod.stockDisponible : 999)) { mostrarError('Stock máximo alcanzado'); return; }
-  carrito[idx].cantidad = nueva;
-  if (carrito[idx].cantidad <= 0) carrito.splice(idx, 1);
-  renderProductos();
-  renderCarrito();
-}
-
-function cambiarCantidad(id, delta) { cambiarDesdeCard(id, delta); }
-
-function quitarDelCarrito(id) {
-  carrito = carrito.filter(i => i.id !== id);
-  renderProductos();
-  renderCarrito();
-}
-
-function renderCarrito() {
-  const div = document.getElementById('carrito-items');
-  const btn = document.getElementById('btn-registrar');
-  document.getElementById('error-msg').hidden = true;
-  if (carrito.length === 0) {
-    div.innerHTML = '<p class="empty">Haz clic en un producto para agregarlo</p>';
-    document.getElementById('total').textContent = '$0';
-    btn.disabled = true;
-    return;
-  }
-  let tot = 0;
-  div.innerHTML = carrito.map(item => {
-    const sub = item.precio * item.cantidad;
-    tot += sub;
-    return `<div class="carrito-item">
-      <span class="ci-nombre">${item.nombre}</span>
-      <div class="ci-qty">
-        <button onclick="cambiarCantidad(${item.id},-1)">−</button>
-        <span>${item.cantidad}</span>
-        <button onclick="cambiarCantidad(${item.id},1)">+</button>
-      </div>
-      <span class="ci-sub">${fmt(sub)}</span>
-      <button class="ci-rm" onclick="quitarDelCarrito(${item.id})" title="Quitar">✕</button>
-    </div>`;
-  }).join('');
-  document.getElementById('total').textContent = fmt(tot);
-  btn.disabled = false;
-}
-
-async function registrarVenta() {
-  if (carrito.length === 0) return;
-  const btn = document.getElementById('btn-registrar');
-  btn.disabled = true; btn.textContent = 'Registrando…';
-  const body = {
-    canal: document.getElementById('canal').value,
-    notas: document.getElementById('notas').value.trim() || null,
-    detalles: carrito.map(i => ({ productoId: i.id, cantidad: i.cantidad }))
-  };
-  try {
-    const res = await fetch('/api/ventas', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    const data = await res.json();
-    if (!res.ok) { mostrarError(data.error || 'Error al registrar'); return; }
-    carrito = [];
-    document.getElementById('notas').value = '';
-    mostrarToast(`✅ Venta #${data.id} — Recibo N°${data.numeroRecibo || '?'}`);
-    await cargarProductos();
-    await cargarHistorial();
-    renderCarrito();
-  } catch { mostrarError('No se pudo conectar al servidor.'); }
-  finally { btn.disabled = false; btn.textContent = 'Registrar venta'; }
-}
-
-async function cargarHistorial() {
-  const div = document.getElementById('historial');
-  try {
-    const res = await fetch('/api/ventas');
-    const ventas = await res.json();
-    if (ventas.length === 0) { div.innerHTML = '<p class="empty">Aún no hay ventas registradas.</p>'; return; }
-    div.innerHTML = ventas.slice(0,20).map(v => {
-      const fecha = new Date(v.fecha).toLocaleString('es-CL',{dateStyle:'short',timeStyle:'short'});
-      return `<div class="hist-item">
-        <div class="hist-header">
-          <span class="hist-id">#${v.id}${v.numeroRecibo?' · Rec. N°'+v.numeroRecibo:''}</span>
-          <span class="hist-total">${fmt(v.total)}</span>
-        </div>
-        <div class="hist-meta">${fecha} &nbsp;
-          <span class="hist-canal canal-${v.canal}">${v.canal}</span>
-          ${v.notas?'· '+v.notas:''}
-        </div>
-      </div>`;
-    }).join('');
-  } catch { div.innerHTML = '<p class="empty">Sin historial.</p>'; }
-}
-
-function mostrarError(msg) {
-  const el = document.getElementById('error-msg');
-  el.textContent = msg; el.hidden = false;
-}
-function mostrarToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-}
-
-document.getElementById('btn-registrar').disabled = true;
-cargarProductos();
-cargarHistorial();
-</script>
 </body>
 </html>
