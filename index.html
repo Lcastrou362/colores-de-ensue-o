@@ -1,0 +1,676 @@
+<title>Colores de Ensueño</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ── Tokens ── */
+  :root {
+    --bg: #faf8f5;
+    --fg: #1c1612;
+    --fg2: #5a4e43;
+    --fg3: #8a7a6e;
+    --accent: #bf3a5c;
+    --green: #1e6b53;
+    --gold: #c49a3a;
+    --card-bg: #ffffff;
+    --nav-bg: rgba(250,248,245,0.92);
+    --border: #e8e0d6;
+    --hero-bg: #1e1a17;
+    --hero-fg: #f5f0ea;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a1714;
+      --fg: #f0ebe3;
+      --fg2: #c4b8a8;
+      --fg3: #8a7a6e;
+      --accent: #d4556e;
+      --green: #2a9070;
+      --gold: #d4aa50;
+      --card-bg: #242018;
+      --nav-bg: rgba(26,23,20,0.92);
+      --border: #3a3228;
+      --hero-bg: #0e0c0a;
+      --hero-fg: #f0ebe3;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1a1714;
+    --fg: #f0ebe3;
+    --fg2: #c4b8a8;
+    --fg3: #8a7a6e;
+    --accent: #d4556e;
+    --green: #2a9070;
+    --gold: #d4aa50;
+    --card-bg: #242018;
+    --nav-bg: rgba(26,23,20,0.92);
+    --border: #3a3228;
+    --hero-bg: #0e0c0a;
+    --hero-fg: #f0ebe3;
+    color-scheme: dark;
+  }
+
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.65;
+    padding-inline: 0;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ── Nav ── */
+  nav {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 clamp(16px, 5vw, 80px);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--fg);
+    white-space: nowrap;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg2);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  @media (max-width: 600px) {
+    .nav-links { gap: 16px; }
+    .nav-links a { font-size: 0.72rem; letter-spacing: 0.06em; }
+  }
+  @media (max-width: 440px) {
+    .nav-links { display: none; }
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--hero-bg);
+    color: var(--hero-fg);
+    min-height: 90svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: clamp(48px, 10vw, 100px) clamp(16px, 6vw, 80px);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 80%, rgba(191,58,92,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 20%, rgba(30,107,83,0.10) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    font-weight: 500;
+    line-height: 1.08;
+    text-wrap: balance;
+    margin-bottom: 24px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-sub {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    font-weight: 300;
+    color: rgba(245,240,234,0.75);
+    max-width: 520px;
+    margin-bottom: 40px;
+    text-wrap: balance;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 2px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #a8304f; }
+  .btn-outline {
+    background: transparent;
+    color: var(--hero-fg);
+    border: 1px solid rgba(245,240,234,0.35);
+    margin-left: 12px;
+  }
+  .btn-outline:hover { border-color: var(--hero-fg); }
+  .hero-scroll {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: rgba(245,240,234,0.4);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(245,240,234,0.4), transparent);
+    animation: scrollpulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollpulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 0.8; transform: scaleY(1.1); }
+  }
+
+  /* ── Section base ── */
+  section { padding: clamp(60px, 10vw, 100px) clamp(16px, 6vw, 80px); }
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 500;
+    line-height: 1.12;
+    text-wrap: balance;
+    margin-bottom: 28px;
+  }
+
+  /* ── About ── */
+  .about {
+    background: var(--bg);
+  }
+  .about-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+  @media (max-width: 720px) {
+    .about-inner { grid-template-columns: 1fr; }
+  }
+  .about-quote-block {
+    border-left: 3px solid var(--accent);
+    padding-left: 24px;
+    margin-bottom: 32px;
+  }
+  .about-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--fg);
+    margin-bottom: 10px;
+  }
+  .about-quote-author {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg3);
+  }
+  .about-text p {
+    color: var(--fg2);
+    margin-bottom: 18px;
+    font-size: 0.97rem;
+    line-height: 1.75;
+  }
+  .about-text p:last-child { margin-bottom: 0; }
+
+  /* Stats strip */
+  .stats-strip {
+    background: var(--green);
+    color: #fff;
+    padding: clamp(36px, 6vw, 56px) clamp(16px, 6vw, 80px);
+  }
+  .stats-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    text-align: center;
+  }
+  @media (max-width: 560px) {
+    .stats-inner { grid-template-columns: 1fr; gap: 24px; }
+  }
+  .stat-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 500;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.4;
+  }
+
+  /* ── Products ── */
+  .products {
+    background: var(--card-bg);
+  }
+  .products-header {
+    max-width: 1100px;
+    margin: 0 auto 48px;
+  }
+  .products-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+  .product-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+  }
+  .product-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    background: var(--border);
+  }
+  .product-info {
+    padding: 18px 20px 22px;
+  }
+  .product-category {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    color: var(--fg);
+  }
+  .product-desc {
+    font-size: 0.82rem;
+    color: var(--fg3);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .product-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--green);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Fairs section ── */
+  .fairs {
+    background: var(--bg);
+  }
+  .fairs-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .fairs-inner .section-title { margin-bottom: 20px; }
+  .fairs-intro {
+    font-size: 1rem;
+    color: var(--fg2);
+    max-width: 620px;
+    margin: 0 auto 48px;
+    line-height: 1.8;
+  }
+  .fairs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    text-align: left;
+  }
+  .fair-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 24px 20px;
+  }
+  .fair-icon {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+  }
+  .fair-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--fg);
+    margin-bottom: 6px;
+  }
+  .fair-detail {
+    font-size: 0.82rem;
+    color: var(--fg3);
+    line-height: 1.5;
+  }
+
+  /* ── Instagram CTA ── */
+  .instagram {
+    background: linear-gradient(135deg, var(--hero-bg) 0%, #2d1f2a 100%);
+    color: var(--hero-fg);
+    text-align: center;
+    padding: clamp(60px, 10vw, 100px) clamp(16px, 6vw, 80px);
+  }
+  .instagram .section-label { color: var(--gold); }
+  .instagram .section-title {
+    color: var(--hero-fg);
+    margin-bottom: 16px;
+  }
+  .insta-handle {
+    font-size: 1.1rem;
+    color: rgba(245,240,234,0.65);
+    margin-bottom: 36px;
+  }
+  .insta-handle a {
+    color: var(--gold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .insta-handle a:hover { color: #fff; }
+
+  /* ── Footer ── */
+  footer {
+    background: #0e0c0a;
+    color: rgba(245,240,234,0.45);
+    text-align: center;
+    padding: 36px clamp(16px, 6vw, 80px);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
+  }
+  footer strong {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: rgba(245,240,234,0.65);
+    margin-bottom: 6px;
+    letter-spacing: 0.06em;
+  }
+  footer a { color: var(--gold); }
+  footer a:hover { color: #fff; }
+  .footer-divider {
+    margin: 16px auto;
+    width: 40px;
+    height: 1px;
+    background: rgba(245,240,234,0.15);
+  }
+</style>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Colores de <span>Ensueño</span></a>
+  <ul class="nav-links">
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#productos">Productos</a></li>
+    <li><a href="#ferias">Ferias</a></li>
+    <li><a href="#instagram">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Artesanía textil · Melipilla, Chile</p>
+  <h1 class="hero-title">Hecho a mano,<br>hecho con <em>alma</em></h1>
+  <p class="hero-sub">Cojines, bolsos y textiles del hogar tejidos con amor en el corazón de la Región Metropolitana. Trece años de oficio artesanal.</p>
+  <div>
+    <a href="#productos" class="btn btn-primary">Ver productos</a>
+    <a href="#nosotros" class="btn btn-outline">Nuestra historia</a>
+  </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="scroll-line"></div>
+    <span>Descubrir</span>
+  </div>
+</section>
+
+<!-- QUIÉNES SOMOS -->
+<section class="about" id="nosotros">
+  <div class="about-inner">
+    <div>
+      <span class="section-label">Quiénes somos</span>
+      <h2 class="section-title">13 años cosiendo sueños en cada pieza</h2>
+      <div class="about-text">
+        <p>Colores de Ensueño nació en <strong>Melipilla</strong> de la mano de Ximena Urbano, artesana con más de <strong>13 años de trayectoria</strong> en la creación textil. Cada bolso, cojín y camino de mesa sale de sus manos con la misma dedicación con la que inició este camino: transformar telas en objetos que duran y que emocionan.</p>
+        <p>El nuestro es un trabajo de comunidad. Ximena comparte el oficio junto a <strong>otros artesanos y artesanas</strong>, recorriendo ferias donde se celebra lo hecho a mano. Ese espíritu de colaboración y respeto por el trabajo artesanal se refleja en cada pieza.</p>
+        <p>Si buscas algo único, con historia y con cariño, estás en el lugar indicado.</p>
+      </div>
+    </div>
+    <div>
+      <div class="about-quote-block">
+        <p class="about-quote">"Cada puntada es intencional. Cada color tiene una razón de ser."</p>
+        <span class="about-quote-author">— Ximena Urbano, fundadora</span>
+      </div>
+      <div class="about-text">
+        <p>Trabajamos principalmente con <strong>lona turca, lino gamuzado y técnica patchwork</strong> — materiales elegidos por su durabilidad y su capacidad de retener el color. Lo que sale de nuestro taller está pensado para acompañarte muchos años.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-number">13+</div>
+      <div class="stat-label">Años de trayectoria<br>artesanal</div>
+    </div>
+    <div>
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Hecho a mano<br>en Melipilla</div>
+    </div>
+    <div>
+      <div class="stat-number">♥</div>
+      <div class="stat-label">Comunidad de artesanos<br>que comparte el oficio</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTOS -->
+<section class="products" id="productos">
+  <div class="products-header">
+    <span class="section-label">Nuestros productos</span>
+    <h2 class="section-title">Textiles que cuentan una historia</h2>
+  </div>
+  <div class="products-grid">
+    <div class="product-card">
+      <img class="product-img" src="images/cojin_cuadrado.jpg" alt="Cojín Cuadrado Lino Gamuzado" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Cojines</div>
+        <div class="product-name">Cojín Cuadrado Lino Gamuzado</div>
+        <div class="product-desc">Textura suave y elegante, ideal para sala o dormitorio.</div>
+        <div class="product-price">$8.000</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-img" src="images/cojin_rectangular.jpg" alt="Cojín Rectangular Lino Gamuzado" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Cojines</div>
+        <div class="product-name">Cojín Rectangular Lino Gamuzado</div>
+        <div class="product-desc">Formato alargado, perfecto para sofá o respaldo de cama.</div>
+        <div class="product-price">$6.000</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-img" src="images/cojin_infantil.jpg" alt="Cojín Infantil" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Cojines</div>
+        <div class="product-name">Cojín Infantil</div>
+        <div class="product-desc">Diseños de hadas, estrellas y nubes para los más pequeños.</div>
+        <div class="product-price">$6.000</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-img" src="images/cojin_lino.jpg" alt="Cojín Lino" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Cojines</div>
+        <div class="product-name">Cojín Lino</div>
+        <div class="product-desc">Línea natural y minimalista, disponible en varios tamaños.</div>
+        <div class="product-price">Desde $6.000</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-img" src="images/bolso_playero.jpg" alt="Bolso Playero Lona Turca" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Bolsos</div>
+        <div class="product-name">Bolso Playero Lona Turca</div>
+        <div class="product-desc">Amplio, resistente y colorido para tus días de sol.</div>
+        <div class="product-price">$7.000</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-img" src="images/bolso_compras.jpg" alt="Bolso de Compras Lona Turca" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Bolsos</div>
+        <div class="product-name">Bolso de Compras Lona Turca</div>
+        <div class="product-desc">Práctico y ecológico, perfectamente cosido para durar.</div>
+        <div class="product-price">$7.000</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-img" src="images/bolso_patchwork.jpg" alt="Bolso Patchwork" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Bolsos</div>
+        <div class="product-name">Bolso Patchwork</div>
+        <div class="product-desc">Combinación única de retazos, cada uno irrepetible.</div>
+        <div class="product-price">$10.000</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-img" src="images/camino_mesa.jpg" alt="Camino de Mesa Patchwork" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Hogar</div>
+        <div class="product-name">Camino de Mesa Patchwork</div>
+        <div class="product-desc">Dale vida a tu mesa con combinaciones de colores únicas.</div>
+        <div class="product-price">$14.000</div>
+      </div>
+    </div>
+    <div class="product-card">
+      <img class="product-img" src="images/mantel.jpg" alt="Mantel Lona Turca" loading="lazy">
+      <div class="product-info">
+        <div class="product-category">Hogar</div>
+        <div class="product-name">Mantel Lona Turca</div>
+        <div class="product-desc">Resistente, lavable y con un color que no destiñe.</div>
+        <div class="product-price">Desde $18.000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FERIAS -->
+<section class="fairs" id="ferias">
+  <div class="fairs-inner">
+    <span class="section-label">Dónde encontrarnos</span>
+    <h2 class="section-title">Presentes en las ferias artesanales</h2>
+    <p class="fairs-intro">Las ferias son nuestro hogar. Ahí es donde el trabajo artesanal cobra vida, donde puedes tocar las telas, ver los colores de cerca y conversar con quienes hacemos cada pieza. Ximena recorre las ferias junto a una comunidad de artesanos que comparte la misma pasión por lo hecho a mano.</p>
+    <div class="fairs-grid">
+      <div class="fair-card">
+        <div class="fair-icon">🧵</div>
+        <div class="fair-name">Feria Artesanal Melipilla</div>
+        <div class="fair-detail">Nuestra feria local de origen, donde todo comenzó.</div>
+      </div>
+      <div class="fair-card">
+        <div class="fair-icon">🎨</div>
+        <div class="fair-name">Ferias Regionales</div>
+        <div class="fair-detail">Participamos en ferias de artesanía a lo largo de la Región Metropolitana.</div>
+      </div>
+      <div class="fair-card">
+        <div class="fair-icon">📅</div>
+        <div class="fair-name">¿Cuándo y dónde?</div>
+        <div class="fair-detail">Síguenos en Instagram <a href="https://www.instagram.com/ximenaurbano5" target="_blank" rel="noopener" style="color:var(--accent)">@ximenaurbano5</a> para ver las fechas de las próximas ferias.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="instagram" id="instagram">
+  <span class="section-label">Síguenos</span>
+  <h2 class="section-title">Conéctate con nosotros</h2>
+  <p class="insta-handle">Encuentra los últimos trabajos, fechas de ferias y novedades en <a href="https://www.instagram.com/ximenaurbano5" target="_blank" rel="noopener">@ximenaurbano5</a></p>
+  <a href="https://www.instagram.com/ximenaurbano5" target="_blank" rel="noopener" class="btn btn-primary" style="background:var(--gold);color:#1c1612;font-weight:500">
+    Ver en Instagram →
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Colores de Ensueño</strong>
+  Artesanía textil hecha a mano · Melipilla, Chile
+  <div class="footer-divider"></div>
+  <a href="https://www.instagram.com/ximenaurbano5" target="_blank" rel="noopener">@ximenaurbano5</a>
+  &nbsp;·&nbsp;
+  © 2026 Ximena Urbano
+</footer>
